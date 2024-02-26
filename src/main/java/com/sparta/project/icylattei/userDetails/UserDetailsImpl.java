@@ -2,15 +2,12 @@ package com.sparta.project.icylattei.userDetails;
 
 import com.sparta.project.icylattei.user.entity.User;
 import com.sparta.project.icylattei.user.entity.UserRoleEnum;
-import lombok.Getter;
+import java.util.ArrayList;
+import java.util.Collection;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.ArrayList;
-import java.util.Collection;
-
-@Getter
 public record UserDetailsImpl(User user) implements UserDetails {
 
     @Override
