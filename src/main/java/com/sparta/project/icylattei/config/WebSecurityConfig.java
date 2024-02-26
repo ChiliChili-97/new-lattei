@@ -35,7 +35,8 @@ public class WebSecurityConfig {
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration)
+        throws Exception {
         return configuration.getAuthenticationManager();
     }
 
@@ -56,14 +57,13 @@ public class WebSecurityConfig {
         http.csrf(AbstractHttpConfigurer::disable);
 
         http.sessionManagement(sessionManagement ->
-                sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+            sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
         http.authorizeHttpRequests(authorizeHttpRequests ->
-                authorizeHttpRequests
-                        .requestMatchers("/").permitAll()
-                        .requestMatchers("/users/signup", "/users/login").permitAll()
-                        .anyRequest().authenticated());
-
+            authorizeHttpRequests
+                .requestMatchers("/").permitAll()
+                .requestMatchers("/users/signup", "/users/login").permitAll()
+                .anyRequest().authenticated());
 
         http.addFilterBefore(jwtAuthorizationFilter(), JwtAuthenticationFilter.class);
         http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);

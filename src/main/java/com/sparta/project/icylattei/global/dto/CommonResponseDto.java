@@ -1,4 +1,4 @@
-package com.sparta.project.icylattei.global;
+package com.sparta.project.icylattei.global.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
