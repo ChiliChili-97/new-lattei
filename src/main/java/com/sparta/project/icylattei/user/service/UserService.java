@@ -26,12 +26,14 @@ public class UserService {
     public void signup(SignupRequest request) {
         String username = request.getUsername();
         String password = passwordEncoder.encode(request.getPassword());
+        String nickname = request.getNickname();
 
         validateUserDuplicate(userRepository.findByUsername(username));
         // 사용자 ROLE 확인
-        UserRoleEnum role = validateUserRole(request, UserRoleEnum.USER);
+        UserRoleEnum role = UserRoleEnum.USER;
+        role = validateUserRole(request, role);
 
-        User user = new User(username, password, role);
+        User user = new User(username, password, role, nickname);
         userRepository.save(user);
     }
 
