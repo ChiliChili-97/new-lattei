@@ -1,6 +1,6 @@
 package com.sparta.project.icylattei.user.controller;
 
-import com.sparta.project.icylattei.global.CommonResponseDto;
+import com.sparta.project.icylattei.global.dto.CommonResponseDto;
 import com.sparta.project.icylattei.user.dto.requestDto.SignupRequest;
 import com.sparta.project.icylattei.user.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;

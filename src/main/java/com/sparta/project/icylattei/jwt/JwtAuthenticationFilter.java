@@ -1,8 +1,8 @@
 package com.sparta.project.icylattei.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sparta.project.icylattei.global.CommonResponseDto;
-import com.sparta.project.icylattei.user.dto.requestDto.SignupRequest;
+import com.sparta.project.icylattei.global.dto.CommonResponseDto;
+import com.sparta.project.icylattei.user.dto.requestDto.SignInRequest;
 import com.sparta.project.icylattei.user.entity.UserRoleEnum;
 import com.sparta.project.icylattei.userDetails.UserDetailsImpl;
 import jakarta.servlet.FilterChain;
@@ -19,6 +19,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Slf4j(topic = "로그인 및 JWT 생성")
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
+
     private final JwtUtil jwtUtil;
 
     public JwtAuthenticationFilter(JwtUtil jwtUtil) {
@@ -27,16 +28,18 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     }
 
     @Override
-    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
+    public Authentication attemptAuthentication(HttpServletRequest request,
+        HttpServletResponse response) throws AuthenticationException {
         try {
-            SignupRequest requestDto = new ObjectMapper().readValue(request.getInputStream(), SignupRequest.class);
+            SignInRequest requestDto = new ObjectMapper().readValue(request.getInputStream(),
+                SignInRequest.class);
 
             return getAuthenticationManager().authenticate(
-                    new UsernamePasswordAuthenticationToken(
-                            requestDto.getUsername(),
-                            requestDto.getPassword(),
-                            null
-                    )
+                new UsernamePasswordAuthenticationToken(
+                    requestDto.getUsername(),
+                    requestDto.getPassword(),
+                    null
+                )
             );
         } catch (IOException e) {
             log.error(e.getMessage());
@@ -45,7 +48,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     }
 
     @Override
-    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult)
+    protected void successfulAuthentication(HttpServletRequest request,
+        HttpServletResponse response, FilterChain chain, Authentication authResult)
         throws IOException {
         String username = ((UserDetailsImpl) authResult.getPrincipal()).getUsername();
         UserRoleEnum role = ((UserDetailsImpl) authResult.getPrincipal()).user().getRole();
@@ -53,17 +57,17 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         String token = jwtUtil.createToken(username, role);
         response.addHeader(JwtUtil.AUTHORIZATION_HEADER, token);
 
-
         // 응답 생성
         CommonResponseDto loginResponse = new CommonResponseDto(HttpStatus.OK.value(), null);
-       // JSON으로 변환하여 응답
+        // JSON으로 변환하여 응답
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
         response.getWriter().write(new ObjectMapper().writeValueAsString(loginResponse));
     }
 
     @Override
-    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed)
+    protected void unsuccessfulAuthentication(HttpServletRequest request,
+        HttpServletResponse response, AuthenticationException failed)
         throws IOException {
         response.setStatus(401);
 
