@@ -5,6 +5,7 @@ import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.UnsupportedJwtException;
 import java.util.Objects;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationServiceException;
@@ -40,6 +41,12 @@ public class ExceptionController {
     })
     public ResponseEntity<ExceptionDto> ForbiddenExceptionHandler(Exception e) {
         return createResponse(HttpStatus.FORBIDDEN, e.getMessage());
+    }
+
+    @ExceptionHandler({DuplicateKeyException.class})
+    public ResponseEntity<ExceptionDto> handleDuplicateException(Exception e) {
+        return createResponse(HttpStatus.CONFLICT,
+            e.getMessage());
     }
 
     private ResponseEntity<ExceptionDto> createResponse(HttpStatus status, String message) {

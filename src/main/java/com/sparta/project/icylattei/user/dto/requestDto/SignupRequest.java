@@ -18,5 +18,10 @@ public class SignupRequest {
     @Pattern(regexp = "^[a-zA-Z0-9]{8,15}$", message = "비밀번호는 영어 대문자 및 소문자, 숫자(0~9)로 구성되어야 하며, 8자 이상 15자 이하여야 합니다.")
     private String password;
 
+    @NotBlank
+    private boolean admin = false;
+
+    @NotBlank
+    private String adminToken = "";
 }
 
