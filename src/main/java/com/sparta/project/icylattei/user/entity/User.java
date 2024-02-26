@@ -8,10 +8,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@EntityListeners(AuditingEntityListener.class)
 public class User {
 
     @Id
@@ -24,9 +26,10 @@ public class User {
     @Column(nullable = false)
     private String password;
 
-//    @Column(nullable = true, unique = true)
+    @Column(nullable = false, unique = true)
     private String nickname;
 
+    @Column(nullable = true)
     private String info;
 
     @Column(nullable = false)
@@ -42,21 +45,12 @@ public class User {
     private LocalDateTime modifiedAt;
 
     @Builder
-    public User(String username, String password, UserRoleEnum role) {
+    public User(String username, String password, UserRoleEnum role, String nickname) {
         this.username = username;
         this.password = password;
         this.role = role;
-    }
-
-    // 서비스 메서드
-    public void setNickname(String nickname) {
         this.nickname = nickname;
     }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
 }
 
 
