@@ -54,6 +54,15 @@ public class User implements Serializable {
         this.role = role;
         this.nickname = nickname;
     }
+
+    public void update(String nickname, String info) {
+        this.nickname = nickname;
+        this.info = info;
+    }
+
+    public void updatePassword(String password) {
+        this.password = password;
+    }
 }
 
 
