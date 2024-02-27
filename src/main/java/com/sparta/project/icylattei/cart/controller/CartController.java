@@ -27,26 +27,31 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RequestMapping("/users/carts")
 public class CartController {
+
     private final CartService cartService;
 
     @PostMapping
     public CartResponseDto createCart(@AuthenticationPrincipal UserDetailsImpl userDetails,
-        @RequestBody CartRequestDto requestDto){
+        @RequestBody CartRequestDto requestDto) {
         return cartService.createCart(requestDto, userDetails.getUser());
     }
 
     @GetMapping
-    public CartsResponseDto getCart(@AuthenticationPrincipal UserDetailsImpl userDetails){
+    public CartsResponseDto getCart(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         return cartService.getCart(userDetails.getUser());
     }
 
     @PutMapping("/{cartId}")
-    public ResponseEntity<CartHttpResponseDto> updateCart(@PathVariable Long cartId, @AuthenticationPrincipal UserDetailsImpl userDetails, @RequestBody CartRequestDto requestDto){
+    public ResponseEntity<CartHttpResponseDto> updateCart(@PathVariable Long cartId,
+        @AuthenticationPrincipal UserDetailsImpl userDetails,
+        @RequestBody CartRequestDto requestDto) {
         cartService.updateCart(cartId, requestDto, userDetails.getUser());
         return ResponseEntity.ok().body(new CartHttpResponseDto(HttpStatus.OK));
     }
+
     @DeleteMapping("/{cartId}")
-    public ResponseEntity<CartHttpResponseDto> deleteCart(@PathVariable Long cartId, @AuthenticationPrincipal UserDetailsImpl userDetails){
+    public ResponseEntity<CartHttpResponseDto> deleteCart(@PathVariable Long cartId,
+        @AuthenticationPrincipal UserDetailsImpl userDetails) {
         cartService.deleteCart(cartId, userDetails.getUser());
         return ResponseEntity.ok().body(new CartHttpResponseDto(HttpStatus.OK));
     }

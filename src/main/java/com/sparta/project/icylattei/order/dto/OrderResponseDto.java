@@ -11,11 +11,11 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class OrderResponseDto {
+
     private Long id; //주문번호
     private List<Cart> carts;
     private int totalPrice = 0;
     private Date orderDate;
-
 
 
     public OrderResponseDto(Order order) {
