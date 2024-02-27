@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class CartService {
+
     private final CartRepository cartRepository;
     private final ProductRepository productRepository;
 
@@ -36,13 +37,16 @@ public class CartService {
     }
 
     public CartResponseDto deleteCart(Long cartId, User user) {
-        Cart cart = cartRepository.findById(cartId).orElseThrow(() -> new IllegalArgumentException("장바구니를 찾을 수 없습니다."));
+        Cart cart = cartRepository.findById(cartId)
+            .orElseThrow(() -> new IllegalArgumentException("장바구니를 찾을 수 없습니다."));
         cartRepository.delete(cart);
         return new CartResponseDto(cart);
     }
-@Transactional
+
+    @Transactional
     public CartResponseDto updateCart(Long cartId, CartRequestDto requestDto, User user) {
-        Cart cart = cartRepository.findById(cartId).orElseThrow(() -> new IllegalArgumentException("장바구니를 찾을 수 없습니다."));
+        Cart cart = cartRepository.findById(cartId)
+            .orElseThrow(() -> new IllegalArgumentException("장바구니를 찾을 수 없습니다."));
 
         String productName = requestDto.getProductName();
         Product product = productRepository.findByProductName(productName);

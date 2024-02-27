@@ -24,8 +24,9 @@ public class OrderService {
 
     public OrderResponseDto createOrder(OrderRequestDto requestDto, User user) {
         List<Cart> carts = new ArrayList<>();
-        for(int i = 0; i < requestDto.getCarts().size(); i++){
-            carts.add(cartRepository.findById((long) requestDto.getCarts().get(i)).orElseThrow(() -> new IllegalArgumentException("찾을 수 없습니다.")));
+        for (int i = 0; i < requestDto.getCarts().size(); i++) {
+            carts.add(cartRepository.findById((long) requestDto.getCarts().get(i))
+                .orElseThrow(() -> new IllegalArgumentException("찾을 수 없습니다.")));
         }
         Order order = orderRepository.save(new Order(carts, user));
         return new OrderResponseDto(order);
@@ -39,17 +40,20 @@ public class OrderService {
     @Transactional
     public OrderResponseDto updateOrder(Long orderId, User user, OrderRequestDto requestDto) {
         List<Cart> carts = new ArrayList<>();
-        for(int i = 0; i < requestDto.getCarts().size(); i++){
-            carts.add(cartRepository.findById((long) requestDto.getCarts().get(i)).orElseThrow(() -> new IllegalArgumentException("찾을 수 없습니다.")));
+        for (int i = 0; i < requestDto.getCarts().size(); i++) {
+            carts.add(cartRepository.findById((long) requestDto.getCarts().get(i))
+                .orElseThrow(() -> new IllegalArgumentException("찾을 수 없습니다.")));
         }
-        Order order = orderRepository.findById(orderId).orElseThrow(() -> new IllegalArgumentException("찾을 수 없습니다."));
+        Order order = orderRepository.findById(orderId)
+            .orElseThrow(() -> new IllegalArgumentException("찾을 수 없습니다."));
         order.update(carts);
         return new OrderResponseDto(order);
     }
 
 
     public OrderResponseDto deleteOrder(Long orderId, User user) {
-        Order order = orderRepository.findById(orderId).orElseThrow(() -> new IllegalArgumentException("장바구니를 찾을 수 없습니다."));
+        Order order = orderRepository.findById(orderId)
+            .orElseThrow(() -> new IllegalArgumentException("장바구니를 찾을 수 없습니다."));
         orderRepository.delete(order);
         return new OrderResponseDto(order);
     }

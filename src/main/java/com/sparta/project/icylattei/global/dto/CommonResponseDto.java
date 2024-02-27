@@ -10,7 +10,8 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@JsonInclude(JsonInclude.Include.NON_NULL)  // null이 아닌 경우에만 JSON에 포함되도록 지정, 객체를 JSON으로 변환시, 값이 null인 필드는 무시, 값이 있는 필드만 JSON에 포함된다.
+@JsonInclude(JsonInclude.Include.NON_NULL)
+// null이 아닌 경우에만 JSON에 포함되도록 지정, 객체를 JSON으로 변환시, 값이 null인 필드는 무시, 값이 있는 필드만 JSON에 포함된다.
 public class CommonResponseDto<T> {
 
     private Integer statusCode;

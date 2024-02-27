@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 @Getter
 @RequiredArgsConstructor
 public class CartHttpResponseDto {
+
     private final HttpStatus httpStatus;
 
 }
