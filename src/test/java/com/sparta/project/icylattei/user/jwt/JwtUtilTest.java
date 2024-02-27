@@ -1,4 +1,4 @@
-package com.sparta.project.icylattei.jwt;
+package com.sparta.project.icylattei.user.jwt;
 
 import static com.sparta.project.icylattei.jwt.JwtUtil.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -7,7 +7,8 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.BDDMockito.given;
 
-import com.sparta.project.icylattei.test.CommonTest;
+import com.sparta.project.icylattei.jwt.JwtUtil;
+import com.sparta.project.icylattei.test.UserCommonTest;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,7 +22,7 @@ import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest
 @ActiveProfiles("test") // value어노테이션 정보를 가져올 수 있게 하고, test가 붙은 설정을 가지고 옴 "application-test.properties"
-class JwtUtilTest implements CommonTest {
+class JwtUtilTest implements UserCommonTest {
 
     @Autowired
     JwtUtil jwtUtil;
@@ -29,7 +30,8 @@ class JwtUtilTest implements CommonTest {
     @Mock
     private HttpServletRequest request;
 
-    @BeforeEach  // 각각의 테스트 코드를 실행하기 전에 실행하겠다.
+    @BeforeEach
+        // 각각의 테스트 코드를 실행하기 전에 실행하겠다.
     void setUp() {
         jwtUtil.init();  // secretkey 값 설정
     }
@@ -48,7 +50,7 @@ class JwtUtilTest implements CommonTest {
     @Test
     void resolveToken() {
         // given
-        var token =  TOKEN;
+        var token = TOKEN;
         String baearerToken = BEARER_PREFIX + token;
 
         // when
@@ -80,10 +82,11 @@ class JwtUtilTest implements CommonTest {
         @Test
         void validateToken_fail() {
             // given
-            String invalidToken =  INVALID_TOKEN;
+            String invalidToken = INVALID_TOKEN;
 
             // when
-            boolean isValid = jwtUtil.validateToken(invalidToken);  // isValid가 false 일테니 assertFalse로 확인한다.
+            boolean isValid = jwtUtil.validateToken(
+                invalidToken);  // isValid가 false 일테니 assertFalse로 확인한다.
 
             // then
             assertFalse(isValid);
