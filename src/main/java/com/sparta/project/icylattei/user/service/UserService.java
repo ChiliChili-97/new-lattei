@@ -28,9 +28,10 @@ public class UserService {
         String password = passwordEncoder.encode(request.getPassword());
         String nickname = request.getNickname();
 
+        // 중복된 사용자 확인
         validateUserDuplicate(userRepository.findByUsername(username));
         // 사용자 ROLE 확인
-        UserRoleEnum role = UserRoleEnum.USER;
+        UserRoleEnum role =  UserRoleEnum.USER;
         role = validateUserRole(request, role);
 
         User user = new User(username, password, role, nickname);
@@ -43,7 +44,7 @@ public class UserService {
         }
     }
 
-    private UserRoleEnum validateUserRole(SignupRequest request, UserRoleEnum role){
+    private UserRoleEnum validateUserRole(SignupRequest request, UserRoleEnum role) {
         if (request.isAdmin()) {
             if (!ADMIN_TOKEN.equals(request.getAdminToken())) {
                 throw new IllegalArgumentException("관리자 암호가 틀려 등록이 불가능합니다.");
