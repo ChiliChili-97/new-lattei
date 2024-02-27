@@ -33,7 +33,7 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/signup")
-      public void signup(@Valid @RequestBody SignupRequest request) throws Exception {
+      public void signup(@Valid @RequestBody SignupRequest request) {
 
         userService.signup(request);
       }
