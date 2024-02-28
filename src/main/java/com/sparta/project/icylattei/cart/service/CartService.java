@@ -29,7 +29,7 @@ public class CartService {
         Long productId = requestDto.getProductId();
         Product product = productRepository.findById(productId)
             .orElseThrow(() -> new IllegalArgumentException("상품을 찾을 수 없습니다."));
-        Cart cart = cartRepository.save(new Cart(product, requestDto, user));
+        Cart cart = cartRepository.save(new Cart(product, requestDto, user, "장바구니"));
         return new CartResponseDto(cart);
     }
 

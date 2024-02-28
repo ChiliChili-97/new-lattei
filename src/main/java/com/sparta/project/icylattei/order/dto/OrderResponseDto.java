@@ -23,5 +23,8 @@ public class OrderResponseDto {
         this.carts = carts;
         this.id = order.getOrderId();
         this.orderDate = order.getOrderDate();
+        for (CartResponseDto cart : carts) {
+            totalPrice += cart.getQuantity() * cart.getProduct().getPrice();
+        }
     }
 }

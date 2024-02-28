@@ -42,6 +42,7 @@ public class Order {
     public Order(List<Cart> carts, User user) {
         this.carts = carts;
         this.user = user;
+        this.orderDate = new Date(System.currentTimeMillis());
     }
 
     public void update(List<Cart> carts) {
