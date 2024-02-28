@@ -38,5 +38,4 @@
 # API
 <img width="1069" alt="스크린샷 2024-02-28 오전 10 27 43" src="https://github.com/ChiliChili-97/Icy-Lattei/assets/120374640/4201e4bc-9435-44d1-8d1b-2694ac77b3ce">
 # ERD
-![스크린샷 2024-02-28 175721](https://github.com/ChiliChili-97/Icy-Lattei/assets/71073365/cb4326c4-4880-4790-923c-5837637169be)
-
+<img width="1069" alt="스크린샷 2024-02-28 175721" src="https://github.com/ChiliChili-97/Icy-Lattei/assets/71073365/57215546-1434-4bc8-abad-348e63a83f92">
