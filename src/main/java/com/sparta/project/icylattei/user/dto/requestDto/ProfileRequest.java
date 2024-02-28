@@ -9,8 +9,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ProfileRequest {
 
-    @Pattern(regexp = "^[a-z0-9]*${2,10}", message = "2~10자 사이로 입력해주세요.")
     @NotBlank(message = "닉네임은 필수로 입력해야 합니다.")
+    @Pattern(regexp = "^(?!\\d+$)[a-zA-Z가-힣\\d]{2,10}$",
+        message = "닉네임은 2~10자로 구성되어야 하며, 숫자로만 구성될 수 없습니다.")
     private String nickname;
 
     @NotBlank(message = "내용은 필수로 입력해야 합니다.")
