@@ -38,8 +38,9 @@ public class CartRepositoryTest {
     void createCartTest() {
         //given
         User user = new User("abc12345", "abc@12345", USER, "abc12345");
-        CartRequestDto requestDto = new CartRequestDto("아아", 3, "장바구니");
-        Product product = productRepository.findByProductName(requestDto.getProductName());
+        CartRequestDto requestDto = new CartRequestDto(1L, 3, "장바구니");
+        Product product = productRepository.findById(requestDto.getProductId())
+            .orElseThrow(() -> new IllegalArgumentException("상품을 찾을 수 없습니다."));
         Cart beforeCart = new Cart(product, requestDto, user);
         //when
         userRepository.save(user);
@@ -53,8 +54,9 @@ public class CartRepositoryTest {
     void deleteCartTest() {
         //given
         User user = new User("abc12345", "abc@12345", USER, "abc12345");
-        CartRequestDto requestDto = new CartRequestDto("아아", 3, "장바구니");
-        Product product = productRepository.findByProductName(requestDto.getProductName());
+        CartRequestDto requestDto = new CartRequestDto(1L, 3, "장바구니");
+        Product product = productRepository.findById(requestDto.getProductId())
+            .orElseThrow(() -> new IllegalArgumentException("상품을 찾을 수 없습니다."));
         List<Cart> beforeCart = cartRepository.findAll();
         userRepository.save(user);
         //when
@@ -72,15 +74,17 @@ public class CartRepositoryTest {
         User user = new User("abc12345", "abc@12345", USER, "abc12345");
         userRepository.save(user);
 
-        CartRequestDto beforeRequestDto = new CartRequestDto("아아", 3, "장바구니");
-        Product beforeProduct = productRepository.findByProductName(
-            beforeRequestDto.getProductName());
+        CartRequestDto beforeRequestDto = new CartRequestDto(1L, 3, "장바구니");
+        Product beforeProduct = productRepository.findById(
+                beforeRequestDto.getProductId())
+            .orElseThrow(() -> new IllegalArgumentException("상품을 찾을 수 없습니다."));
         Cart cart = cartRepository.save(new Cart(beforeProduct, beforeRequestDto, user));
 
         //when
-        CartRequestDto afterRequestDto = new CartRequestDto("아아", 2, "장바구니");
-        Product afterProduct = productRepository.findByProductName(
-            afterRequestDto.getProductName());
+        CartRequestDto afterRequestDto = new CartRequestDto(1L, 2, "장바구니");
+        Product afterProduct = productRepository.findById(
+                afterRequestDto.getProductId())
+            .orElseThrow(() -> new IllegalArgumentException("상품을 찾을 수 없습니다."));
         cart.update(afterProduct, afterRequestDto);
 
         //then
@@ -95,9 +99,10 @@ public class CartRepositoryTest {
         //given
         User user = new User("abc12345", "abc@12345", USER, "abc12345");
         userRepository.save(user);
-        CartRequestDto beforeRequestDto = new CartRequestDto("아아", 3, "장바구니");
-        Product beforeProduct = productRepository.findByProductName(
-            beforeRequestDto.getProductName());
+        CartRequestDto beforeRequestDto = new CartRequestDto(1L, 3, "장바구니");
+        Product beforeProduct = productRepository.findById(
+                beforeRequestDto.getProductId())
+            .orElseThrow(() -> new IllegalArgumentException("상품을 찾을 수 없습니다."));
         Cart cart = cartRepository.save(new Cart(beforeProduct, beforeRequestDto, user));
         Long cartId = cart.getCartId();
         //when

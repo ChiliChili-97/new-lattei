@@ -7,9 +7,9 @@ import lombok.Getter;
 @Getter
 public class CartsResponseDto {
 
-    List<Cart> carts;
+    List<CartResponseDto> carts;
 
-    public CartsResponseDto(List<Cart> carts) {
+    public CartsResponseDto(List<CartResponseDto> carts) {
         this.carts = carts;
     }
 }
