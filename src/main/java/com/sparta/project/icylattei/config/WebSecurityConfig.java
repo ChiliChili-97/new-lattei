@@ -66,6 +66,12 @@ public class WebSecurityConfig {
                 .requestMatchers("/users/signup", "/users/login").permitAll()
                 .anyRequest().authenticated());
 
+/*
+        http.logout(logout -> logout
+            .logoutSuccessUrl("/users/logout")
+            .invalidateHttpSession(true));
+*/
+
         http.addFilterBefore(jwtAuthorizationFilter(), JwtAuthenticationFilter.class);
         http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 

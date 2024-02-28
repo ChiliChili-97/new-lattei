@@ -74,7 +74,7 @@ public class ReviewService {
         );
     }
 
-    private static void confirmMatch(Long productId, User user, Review review) {
+    private void confirmMatch(Long productId, User user, Review review) {
         if (!review.getProduct().getProductId().equals(productId)) {
             throw new IllegalArgumentException("리뷰와 상품의 정보가 일치하지 않습니다.");
         }
