@@ -5,6 +5,7 @@ import com.sparta.project.icylattei.global.exception.custom.NotMatchedPassword;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.UnsupportedJwtException;
+import jakarta.persistence.EntityExistsException;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 import org.springframework.dao.DuplicateKeyException;
@@ -31,7 +32,8 @@ public class ExceptionController {
         UsernameNotFoundException.class,
         AuthenticationServiceException.class,
         NoSuchElementException.class,
-        NotMatchedPassword.class
+        NotMatchedPassword.class,
+        EntityExistsException.class
     })
     public ResponseEntity<ExceptionDto> BadRequestExceptionHandler(Exception e) {
         return createResponse(HttpStatus.BAD_REQUEST, e.getMessage());

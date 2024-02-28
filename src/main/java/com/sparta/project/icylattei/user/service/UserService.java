@@ -11,6 +11,7 @@ import com.sparta.project.icylattei.user.entity.User;
 import com.sparta.project.icylattei.user.entity.UserRoleEnum;
 import com.sparta.project.icylattei.user.repository.UserRepository;
 import com.sparta.project.icylattei.userDetails.UserDetailsImpl;
+import jakarta.persistence.EntityExistsException;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -40,8 +41,12 @@ public class UserService {
 
         // 중복된 사용자 확인
         validateUserDuplicate(userRepository.findByUsername(username));
+
+        // 중복된 닉네임 확인
+        validateNicknameDuplicate(request.getNickname());
+
         // 사용자 ROLE 확인
-        UserRoleEnum role =  UserRoleEnum.USER;
+        UserRoleEnum role = UserRoleEnum.USER;
         role = validateUserRole(request, role);
 
         User user = new User(username, password, role, nickname);
@@ -57,6 +62,10 @@ public class UserService {
     @Transactional
     public ProfileResponse updateProfile(UserDetailsImpl userDetails, ProfileRequest request) {
         User user = getUser(userDetails);
+
+        if (!user.getNickname().equals(request.getNickname())) {
+            validateNicknameDuplicate(request.getNickname());
+        }
 
         user.update(request.getNickname(), request.getInfo());
 
@@ -93,6 +102,12 @@ public class UserService {
         }
     }
 
+    private void validateNicknameDuplicate(String request) {
+        if (userRepository.existsByNickname(request)) {
+            throw new EntityExistsException("중복된 닉네임입니다.");
+        }
+    }
+
     private UserRoleEnum validateUserRole(SignupRequest request, UserRoleEnum role) {
         if (request.isAdmin()) {
             if (!ADMIN_TOKEN.equals(request.getAdminToken())) {
@@ -111,20 +126,21 @@ public class UserService {
     }
 
     private void validateNewPassword(String newPassword, String currentPassword) {
-        if(passwordEncoder.matches(newPassword, currentPassword))
+        if (passwordEncoder.matches(newPassword, currentPassword)) {
             throw new DuplicateKeyException("기존 비밀번호와 동일합니다.");
-
+        }
     }
 
     private void validateCheckPassword(String newPassword, String checkPassword) {
-        if(!newPassword.equals(checkPassword))
+        if (!newPassword.equals(checkPassword)) {
             throw new NotMatchedPassword("새로 입력한 비밀번호와 일치하지 않습니다.");
+        }
     }
 
     private void validatePasswordHistory(List<PasswordHistory> recentPassword, String newPassword) {
-        if(!recentPassword.isEmpty()) {
-            for(PasswordHistory password : recentPassword) {
-                if(passwordEncoder.matches(newPassword, password.getPastPassword())) {
+        if (!recentPassword.isEmpty()) {
+            for (PasswordHistory password : recentPassword) {
+                if (passwordEncoder.matches(newPassword, password.getPastPassword())) {
                     throw new DuplicateKeyException("최근 사용했던 비밀번호입니다. 새로운 비밀번호를 입력해주세요.");
                 }
             }
