@@ -36,6 +36,10 @@ public class OrderController {
     public OrdersResponseDto getOrders(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         return orderService.getOrders(userDetails.getUser());
     }
+    @GetMapping("/{orderId}")
+    public OrderResponseDto getOrder(@PathVariable Long orderId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return orderService.getOrder(orderId,userDetails.getUser());
+    }
 
     @PutMapping("/{orderId}")
     public void updateOrder(
