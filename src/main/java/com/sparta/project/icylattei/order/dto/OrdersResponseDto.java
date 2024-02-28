@@ -10,9 +10,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class OrdersResponseDto {
 
-    List<Order> orders;
+    List<OrderResponseDto> orders;
 
-    public OrdersResponseDto(List<Order> orders) {
+    public OrdersResponseDto(List<OrderResponseDto> orders) {
         this.orders = orders;
     }
 }

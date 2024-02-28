@@ -7,12 +7,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class CartRequestDto {
 
-    private String productName;
+    private Long productId;
     private int quantity;
     private String cartStatus;
 
-    public CartRequestDto(String productName, int quantity, String cartStatus) {
-        this.productName = productName;
+    public CartRequestDto(Long productId, int quantity, String cartStatus) {
+        this.productId = productId;
         this.quantity = quantity;
         this.cartStatus = cartStatus;
     }

@@ -1,14 +1,10 @@
 package com.sparta.project.icylattei.cart.controller;
 
 
-import com.sparta.project.icylattei.cart.dto.CartHttpResponseDto;
 import com.sparta.project.icylattei.cart.dto.CartRequestDto;
 import com.sparta.project.icylattei.cart.dto.CartResponseDto;
 import com.sparta.project.icylattei.cart.dto.CartsResponseDto;
 import com.sparta.project.icylattei.cart.service.CartService;
-import com.sparta.project.icylattei.product.entity.Product;
-import com.sparta.project.icylattei.product.repository.ProductRepository;
-import com.sparta.project.icylattei.user.entity.User;
 import com.sparta.project.icylattei.userDetails.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -42,17 +38,15 @@ public class CartController {
     }
 
     @PutMapping("/{cartId}")
-    public ResponseEntity<CartHttpResponseDto> updateCart(@PathVariable Long cartId,
+    public void updateCart(@PathVariable Long cartId,
         @AuthenticationPrincipal UserDetailsImpl userDetails,
         @RequestBody CartRequestDto requestDto) {
-        cartService.updateCart(cartId, requestDto, userDetails.getUser());
-        return ResponseEntity.ok().body(new CartHttpResponseDto(HttpStatus.OK));
+        cartService.updateCart(cartId, requestDto, userDetails.getUser());;
     }
 
     @DeleteMapping("/{cartId}")
-    public ResponseEntity<CartHttpResponseDto> deleteCart(@PathVariable Long cartId,
+    public void deleteCart(@PathVariable Long cartId,
         @AuthenticationPrincipal UserDetailsImpl userDetails) {
         cartService.deleteCart(cartId, userDetails.getUser());
-        return ResponseEntity.ok().body(new CartHttpResponseDto(HttpStatus.OK));
     }
 }

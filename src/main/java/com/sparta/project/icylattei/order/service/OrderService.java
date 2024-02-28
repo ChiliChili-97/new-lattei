@@ -1,5 +1,6 @@
 package com.sparta.project.icylattei.order.service;
 
+import com.sparta.project.icylattei.cart.dto.CartResponseDto;
 import com.sparta.project.icylattei.cart.entity.Cart;
 import com.sparta.project.icylattei.cart.repository.CartRepository;
 import com.sparta.project.icylattei.order.dto.OrderRequestDto;
@@ -12,6 +13,8 @@ import jakarta.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Bean;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -29,16 +32,28 @@ public class OrderService {
                 .orElseThrow(() -> new IllegalArgumentException("찾을 수 없습니다.")));
         }
         Order order = orderRepository.save(new Order(carts, user));
-        return new OrderResponseDto(order);
+        List<CartResponseDto> cartResponseDtos = new ArrayList<>();
+        for (Cart cart : carts) {
+            cartResponseDtos.add(new CartResponseDto(cart));
+        }
+        return new OrderResponseDto(order, cartResponseDtos);
     }
 
     public OrdersResponseDto getOrders(User user) {
         List<Order> orders = orderRepository.findAllByUser(user);
-        return new OrdersResponseDto(orders);
+        List<OrderResponseDto> responseDtos = new ArrayList<>();
+        for (Order order : orders) {
+            List<CartResponseDto> carts = new ArrayList<>();
+            for (int j = 0; j < order.getCarts().size(); j++) {
+                carts.add(new CartResponseDto(order.getCarts().get(j)));
+            }
+            responseDtos.add(new OrderResponseDto(order, carts));
+        }
+        return new OrdersResponseDto(responseDtos);
     }
 
     @Transactional
-    public OrderResponseDto updateOrder(Long orderId, User user, OrderRequestDto requestDto) {
+    public void updateOrder(Long orderId, User user, OrderRequestDto requestDto) {
         List<Cart> carts = new ArrayList<>();
         for (int i = 0; i < requestDto.getCarts().size(); i++) {
             carts.add(cartRepository.findById((long) requestDto.getCarts().get(i))
@@ -46,15 +61,19 @@ public class OrderService {
         }
         Order order = orderRepository.findById(orderId)
             .orElseThrow(() -> new IllegalArgumentException("찾을 수 없습니다."));
+        if(!order.getUser().getId().equals(user.getId())){
+            throw new IllegalArgumentException("수정할 수 없습니다.");
+        }
         order.update(carts);
-        return new OrderResponseDto(order);
     }
 
 
-    public OrderResponseDto deleteOrder(Long orderId, User user) {
+    public void deleteOrder(Long orderId, User user) {
         Order order = orderRepository.findById(orderId)
             .orElseThrow(() -> new IllegalArgumentException("장바구니를 찾을 수 없습니다."));
+        if(!order.getUser().getId().equals(user.getId())){
+            throw new IllegalArgumentException("수정할 수 없습니다.");
+        }
         orderRepository.delete(order);
-        return new OrderResponseDto(order);
     }
 }

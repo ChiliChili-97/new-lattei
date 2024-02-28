@@ -1,7 +1,5 @@
 package com.sparta.project.icylattei.order.controller;
 
-import com.sparta.project.icylattei.cart.dto.CartHttpResponseDto;
-import com.sparta.project.icylattei.order.dto.OrderHttpResponseDto;
 import com.sparta.project.icylattei.order.dto.OrderResponseDto;
 import com.sparta.project.icylattei.order.dto.OrderRequestDto;
 import com.sparta.project.icylattei.order.dto.OrdersResponseDto;
@@ -40,19 +38,17 @@ public class OrderController {
     }
 
     @PutMapping("/{orderId}")
-    public ResponseEntity<OrderHttpResponseDto> updateOrder(
+    public void updateOrder(
         @AuthenticationPrincipal UserDetailsImpl userDetails,
         @PathVariable Long orderId, @RequestBody OrderRequestDto requestDto) {
         orderService.updateOrder(orderId, userDetails.getUser(), requestDto);
-        return ResponseEntity.ok().body(new OrderHttpResponseDto(HttpStatus.OK));
     }
 
     @DeleteMapping("/{orderId}")
-    public ResponseEntity<OrderHttpResponseDto> deleteOrder(
+    public void deleteOrder(
         @AuthenticationPrincipal UserDetailsImpl userDetails,
         @PathVariable Long orderId) {
         orderService.deleteOrder(orderId, userDetails.getUser());
-        return ResponseEntity.ok().body(new OrderHttpResponseDto(HttpStatus.OK));
 
     }
 
