@@ -1,6 +1,5 @@
 package com.sparta.project.icylattei.user.controller;
 
-import com.sparta.project.icylattei.global.dto.CommonResponseDto;
 import com.sparta.project.icylattei.user.dto.requestDto.PasswordUpdateRequest;
 import com.sparta.project.icylattei.user.dto.requestDto.ProfileRequest;
 import com.sparta.project.icylattei.user.dto.requestDto.SignupRequest;
@@ -11,8 +10,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -33,12 +30,11 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/signup")
-      public void signup(@Valid @RequestBody SignupRequest request) {
+    public void signup(@Valid @RequestBody SignupRequest request) {
 
         userService.signup(request);
-      }
-        
-  
+    }
+
     @PostMapping("/logout")
     public void logout(HttpServletRequest request, HttpServletResponse response) {
         new SecurityContextLogoutHandler().logout(request, response,
@@ -57,12 +53,10 @@ public class UserController {
     }
 
     @PutMapping("/password")
-    public ResponseEntity<CommonResponseDto<String>> updatePassword(
+    public void updatePassword(
         @AuthenticationPrincipal UserDetailsImpl userDetails,
-        @RequestBody PasswordUpdateRequest request) {
+        @Valid @RequestBody PasswordUpdateRequest request) {
 
         userService.updatePassword(userDetails, request);
-        return ResponseEntity.status(HttpStatus.OK.value())
-            .body(new CommonResponseDto<>(HttpStatus.OK.value(), "비밀번호 수정완료"));
     }
 }

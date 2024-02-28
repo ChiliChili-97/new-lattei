@@ -1,5 +1,6 @@
 package com.sparta.project.icylattei.user.service;
 
+import com.sparta.project.icylattei.global.exception.custom.NotMatchedPassword;
 import com.sparta.project.icylattei.password.entity.PasswordHistory;
 import com.sparta.project.icylattei.password.repository.PasswordHistoryRepository;
 import com.sparta.project.icylattei.user.dto.requestDto.PasswordUpdateRequest;
@@ -47,73 +48,43 @@ public class UserService {
         userRepository.save(user);
     }
 
-    // 프로필 조회
     public ProfileResponse getProfile(UserDetailsImpl userDetails) {
-        Long userId = userDetails.getUser().getId();
-
-        User user = userRepository.findById(userId)
-            .orElseThrow(() -> new NoSuchElementException("사용자가 존재하지 않습니다."));
+        User user = getUser(userDetails);
 
         return new ProfileResponse(user);
     }
 
-    // 프로필 수정
     @Transactional
     public ProfileResponse updateProfile(UserDetailsImpl userDetails, ProfileRequest request) {
-        Long userId = userDetails.getUser().getId();
-
-        User user = userRepository.findById(userId)
-            .orElseThrow(() -> new NoSuchElementException("사용자가 존재하지 않습니다"));
+        User user = getUser(userDetails);
 
         user.update(request.getNickname(), request.getInfo());
 
         return new ProfileResponse(user);
     }
 
-    // 비밀번호 변경
     @Transactional
     public void updatePassword(UserDetailsImpl userDetails, PasswordUpdateRequest request) {
-        Long userId = userDetails.getUser().getId();
-
-        User user = userRepository.findById(userId)
-            .orElseThrow(() -> new NoSuchElementException("사용자가 존재하지 않습니다."));
-
-        String currentPassword = user.getPassword();
-        String newPassword = request.getPassword();
-
-        validateNewPassword(newPassword, currentPassword);
+        User user = getUser(userDetails);
 
         List<PasswordHistory> recentPassword =
             passwordHistoryRepository.findTop3ByUserOrderByCreatedAtDesc(user);
 
-        if(recentPassword.isEmpty()) {
-            PasswordHistory passwordHistory = new PasswordHistory(currentPassword, user);
+        String currentPassword = user.getPassword();
+        String newPassword = request.getPassword();
+        String checkPassword = request.getCheckPassword();
 
-            passwordHistoryRepository.save(passwordHistory);
+        validateNewPassword(newPassword, currentPassword);
 
-            user.updatePassword(passwordEncoder.encode(request.getPassword()));
-        }
+        validateCheckPassword(newPassword, checkPassword);
 
-        if(!recentPassword.isEmpty()) {
-           for(PasswordHistory password: recentPassword) {
-               if(passwordEncoder.matches(newPassword, password.getPastPassword())) {
-                   throw new DuplicateKeyException("사용했던 비밀번호입니다. 새로운 비밀번호를 입력해주세요.");
-               }
-           }
-        }
+        validatePasswordHistory(recentPassword, newPassword);
 
+        PasswordHistory passwordHistory = new PasswordHistory(currentPassword, user);
 
+        passwordHistoryRepository.save(passwordHistory);
 
-
-
-
-
-    }
-
-    private void validateNewPassword(String newPassword, String currentPassword) {
-        if(passwordEncoder.matches(newPassword, currentPassword))
-            throw new IllegalArgumentException("기존 비밀번호와 동일합니다.");
-
+        user.updatePassword(passwordEncoder.encode(request.getPassword()));
     }
 
     private void validateUserDuplicate(Optional<User> checkUsername) {
@@ -130,6 +101,33 @@ public class UserService {
             role = UserRoleEnum.ADMIN;
         }
         return role;
+    }
 
+    private User getUser(UserDetailsImpl userDetails) {
+        Long userId = userDetails.getUser().getId();
+
+        return userRepository.findById(userId)
+            .orElseThrow(() -> new NoSuchElementException("사용자가 존재하지 않습니다."));
+    }
+
+    private void validateNewPassword(String newPassword, String currentPassword) {
+        if(passwordEncoder.matches(newPassword, currentPassword))
+            throw new DuplicateKeyException("기존 비밀번호와 동일합니다.");
+
+    }
+
+    private void validateCheckPassword(String newPassword, String checkPassword) {
+        if(!newPassword.equals(checkPassword))
+            throw new NotMatchedPassword("새로 입력한 비밀번호와 일치하지 않습니다.");
+    }
+
+    private void validatePasswordHistory(List<PasswordHistory> recentPassword, String newPassword) {
+        if(!recentPassword.isEmpty()) {
+            for(PasswordHistory password : recentPassword) {
+                if(passwordEncoder.matches(newPassword, password.getPastPassword())) {
+                    throw new DuplicateKeyException("최근 사용했던 비밀번호입니다. 새로운 비밀번호를 입력해주세요.");
+                }
+            }
+        }
     }
 }

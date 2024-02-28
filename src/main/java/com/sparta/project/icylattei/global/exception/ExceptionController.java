@@ -1,9 +1,11 @@
 package com.sparta.project.icylattei.global.exception;
 
 import com.sparta.project.icylattei.global.dto.ExceptionDto;
+import com.sparta.project.icylattei.global.exception.custom.NotMatchedPassword;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.UnsupportedJwtException;
+import java.util.NoSuchElementException;
 import java.util.Objects;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
@@ -27,7 +29,9 @@ public class ExceptionController {
     @ExceptionHandler({
         IllegalArgumentException.class,
         UsernameNotFoundException.class,
-        AuthenticationServiceException.class
+        AuthenticationServiceException.class,
+        NoSuchElementException.class,
+        NotMatchedPassword.class
     })
     public ResponseEntity<ExceptionDto> BadRequestExceptionHandler(Exception e) {
         return createResponse(HttpStatus.BAD_REQUEST, e.getMessage());
