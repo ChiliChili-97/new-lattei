@@ -1,11 +1,12 @@
 ![](https://img.shields.io/badge/내일배움캠프-Spring팀과제-white.svg)
-:데스크톱_컴퓨터: 프로젝트 소개
+🖥️ 프로젝트 소개
 ---
 + 프로젝트 명 : LATTE는 말야
 + 소개
     + 한 줄 정리 : "LATTE는 말야" 카페의 주문 어플입니다.
     + 내용 : 카페 앱을 개발해 주문을 할 수 있도록 기능을 구현합니다.
 ---
+
 # Development
 ## 디렉토리 구조
 ```bash
@@ -28,14 +29,18 @@
 ├── settings.gradle            # Gradle 설정 파일
 └── README.md                  # 프로젝트에 대한 설명이 담긴 마크다운 파일
 ```
-## :톱니바퀴: 개발 환경
+
+## ⚙️ 개발 환경
 + JDK amazoncorretto 17.0.9
 + Spring Boot 3.2.3
 + Gradle 8.5
 + MySQL 8.0.35
+  
 ## Code Convension
 + [Google Java Style Guide](https://google.github.io/styleguide/javaguide.html)
+  
 # API
 <img width="1069" alt="스크린샷 2024-02-28 오전 10 27 43" src="https://github.com/ChiliChili-97/Icy-Lattei/assets/120374640/4201e4bc-9435-44d1-8d1b-2694ac77b3ce">
+
 # ERD
 <img width="1069" alt="스크린샷 2024-02-28 175721" src="https://github.com/ChiliChili-97/Icy-Lattei/assets/71073365/57215546-1434-4bc8-abad-348e63a83f92">
