@@ -69,7 +69,7 @@ class UserControllerTest implements UserCommonTest {
             .content(objectMapper.writeValueAsString(TEST_USER_REQUEST_DTO)));
 
         // then
-        action.andExpect(status().isCreated());
+        action.andExpect(status().isOk());
         verify(userService, times(1)).signup(any());
     }
 

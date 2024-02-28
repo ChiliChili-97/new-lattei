@@ -11,6 +11,7 @@ import static org.mockito.BDDMockito.verify;
 import com.sparta.project.icylattei.test.UserCommonTest;
 import com.sparta.project.icylattei.test.UserTestUtils;
 import com.sparta.project.icylattei.user.repository.UserRepository;
+import jakarta.persistence.EntityExistsException;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -41,6 +42,7 @@ class UserServiceTest implements UserCommonTest {
             Optional.empty());  // findByUserName 메서드가 호출되면, emty가 반환될거다. 즉, 중복된 사용자가 없다는 뜻
         given(passwordEncoder.encode(anyString())).willReturn(
             "encodedPassword");  // 비밀번호 정상적으로 인코딩 가정
+        given(userRepository.existsByNickname(anyString())).willReturn(false); // 중복된 nickname이 없다.
 
         var testUser = UserTestUtils.get(TEST_USER);
         given(userRepository.save(any())).willReturn(testUser);   // 정상적으로 DB에 저장
@@ -52,6 +54,7 @@ class UserServiceTest implements UserCommonTest {
         verify(userRepository, times(1)).findByUsername(
             anyString());  // findByUsername 메서드가 한번 호출되었는지 확인
         verify(userRepository, times(1)).save(any());
+        verify(userRepository, times(1)).existsByNickname(anyString());
     }
 
 
@@ -59,10 +62,21 @@ class UserServiceTest implements UserCommonTest {
     @Test
     void signup_fail_duplicateUser() {
         // given
-        given(userRepository.findByUsername(anyString())).willReturn(Optional.of(TEST_USER));
-
+        given(userRepository.findByUsername(anyString())).willReturn(
+            Optional.of(TEST_DUPLCATE_USER));  // 중복된 사용자만 있다.
         // when, then
         assertThrows(DuplicateKeyException.class, () -> userService.signup(TEST_USER_REQUEST_DTO));
     }
-}
 
+
+    @DisplayName("회원 가입 실패 - 중복된 nickname")
+    @Test
+    void signup_fail_duplicateNickname() {
+        // given
+        given(userRepository.findByUsername(anyString())).willReturn(Optional.empty()); // 중복된 사용자는 없다.
+        given(userRepository.existsByNickname(anyString())).willReturn(true); // 중복된 nickname 만 있다.
+
+        // when, then
+        assertThrows(EntityExistsException.class, () -> userService.signup(TEST_USER_REQUEST_DTO));
+    }
+}
