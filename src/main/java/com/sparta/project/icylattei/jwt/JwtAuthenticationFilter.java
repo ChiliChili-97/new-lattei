@@ -1,7 +1,6 @@
 package com.sparta.project.icylattei.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sparta.project.icylattei.global.dto.CommonResponseDto;
 import com.sparta.project.icylattei.user.dto.requestDto.SignInRequest;
 import com.sparta.project.icylattei.user.entity.UserRoleEnum;
 import com.sparta.project.icylattei.userDetails.UserDetailsImpl;
@@ -10,7 +9,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -49,20 +47,12 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
     @Override
     protected void successfulAuthentication(HttpServletRequest request,
-        HttpServletResponse response, FilterChain chain, Authentication authResult)
-        throws IOException {
+        HttpServletResponse response, FilterChain chain, Authentication authResult) {
         String username = ((UserDetailsImpl) authResult.getPrincipal()).getUsername();
         UserRoleEnum role = ((UserDetailsImpl) authResult.getPrincipal()).getUser().getRole();
 
         String token = jwtUtil.createToken(username, role);
         response.addHeader(JwtUtil.AUTHORIZATION_HEADER, token);
-
-        // 응답 생성
-        CommonResponseDto loginResponse = new CommonResponseDto(HttpStatus.OK.value(), null);
-        // JSON으로 변환하여 응답
-        response.setContentType("application/json");
-        response.setCharacterEncoding("UTF-8");
-        response.getWriter().write(new ObjectMapper().writeValueAsString(loginResponse));
     }
 
     @Override
@@ -71,14 +61,9 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         throws IOException {
         response.setStatus(401);
 
-        // 응답 생성
-        CommonResponseDto loginFailResponse = new CommonResponseDto(HttpStatus.OK.value(), null);
-        // JSON으로 변환하여 응답
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
-        response.getWriter().write(new ObjectMapper().writeValueAsString(loginFailResponse));
-
-
+        response.getWriter().write("로그인 실패했습니다.");
     }
 }
 
