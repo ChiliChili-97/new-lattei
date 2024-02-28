@@ -62,6 +62,7 @@ public class WebSecurityConfig {
         http.authorizeHttpRequests(authorizeHttpRequests ->
             authorizeHttpRequests
                 .requestMatchers("/").permitAll()
+                .requestMatchers("/products/{productId}/reviews").permitAll()
                 .requestMatchers("/users/signup", "/users/login").permitAll()
                 .anyRequest().authenticated());
 

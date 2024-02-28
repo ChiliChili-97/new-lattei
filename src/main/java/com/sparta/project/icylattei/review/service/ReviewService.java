@@ -15,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
 public class ReviewService {
 
     private final ReviewRepository reviewRepository;
@@ -80,7 +79,7 @@ public class ReviewService {
             throw new IllegalArgumentException("리뷰와 상품의 정보가 일치하지 않습니다.");
         }
 
-        if (!review.getUser().equals(user)) {
+        if (!review.getUser().getUsername().equals(user.getUsername())) {
             throw new IllegalArgumentException("내가 작성한 리뷰가 아닙니다.");
         }
     }
