@@ -44,16 +44,19 @@ public class Cart {
     @Column(nullable = false)
     private String cartStatus;
 
-    public Cart(Product product, CartRequestDto requestDto, User user) {
+    public Cart(Product product, CartRequestDto requestDto, User user, String status) {
         this.user = user;
         this.product = product;
         this.quantity = requestDto.getQuantity();
-        this.cartStatus = requestDto.getCartStatus();
+        this.cartStatus = status;
     }
 
     public void update(Product product, CartRequestDto requestDto) {
         this.product = product;
         this.quantity = requestDto.getQuantity();
-        this.cartStatus = requestDto.getCartStatus();
+    }
+
+    public void updateStatus(String status) {
+        this.cartStatus = status;
     }
 }

@@ -9,11 +9,9 @@ public class CartRequestDto {
 
     private Long productId;
     private int quantity;
-    private String cartStatus;
 
-    public CartRequestDto(Long productId, int quantity, String cartStatus) {
+    public CartRequestDto(Long productId, int quantity) {
         this.productId = productId;
         this.quantity = quantity;
-        this.cartStatus = cartStatus;
     }
 }

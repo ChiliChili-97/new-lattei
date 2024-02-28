@@ -31,6 +31,9 @@ public class OrderService {
             carts.add(cartRepository.findById((long) requestDto.getCarts().get(i))
                 .orElseThrow(() -> new IllegalArgumentException("찾을 수 없습니다.")));
         }
+        for(Cart cart : carts) {
+            cart.updateStatus("주문");
+        }
         Order order = orderRepository.save(new Order(carts, user));
         List<CartResponseDto> cartResponseDtos = new ArrayList<>();
         for (Cart cart : carts) {
@@ -58,6 +61,7 @@ public class OrderService {
         for (int i = 0; i < requestDto.getCarts().size(); i++) {
             carts.add(cartRepository.findById((long) requestDto.getCarts().get(i))
                 .orElseThrow(() -> new IllegalArgumentException("찾을 수 없습니다.")));
+            carts.get(i).updateStatus("주문");
         }
         Order order = orderRepository.findById(orderId)
             .orElseThrow(() -> new IllegalArgumentException("찾을 수 없습니다."));
