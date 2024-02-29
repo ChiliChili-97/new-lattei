@@ -10,11 +10,9 @@ import com.sparta.project.icylattei.user.dto.responseDto.ProfileResponse;
 import com.sparta.project.icylattei.user.entity.User;
 import com.sparta.project.icylattei.user.entity.UserRoleEnum;
 import com.sparta.project.icylattei.user.repository.UserRepository;
-import com.sparta.project.icylattei.userDetails.UserDetailsImpl;
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DuplicateKeyException;
@@ -61,8 +59,7 @@ public class UserService {
 
     @Transactional
     public ProfileResponse updateProfile(String username, ProfileRequest request) {
-        User user = userRepository.findByUsername(username)
-        .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 사용자입니다."));
+        User user = getUser(username);
 
         if (!user.getNickname().equals(request.getNickname())) {
             validateNicknameDuplicate(request.getNickname());
@@ -75,8 +72,7 @@ public class UserService {
 
     @Transactional
     public void updatePassword(String username, PasswordUpdateRequest request) {
-        User user = userRepository.findByUsername(username)
-            .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 사용자입니다."));
+        User user = getUser(username);
 
         List<PasswordHistory> recentPassword =
             passwordHistoryRepository.findTop3ByUserOrderByCreatedAtDesc(user);
@@ -120,11 +116,9 @@ public class UserService {
         return role;
     }
 
-    private User getUser(UserDetailsImpl userDetails) {
-        Long userId = userDetails.getUser().getId();
-
-        return userRepository.findById(userId)
-            .orElseThrow(() -> new NoSuchElementException("사용자가 존재하지 않습니다."));
+    private User getUser(String username) {
+        return userRepository.findByUsername(username)
+            .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 사용자입니다."));
     }
 
     private void validateNewPassword(String newPassword, String currentPassword) {
