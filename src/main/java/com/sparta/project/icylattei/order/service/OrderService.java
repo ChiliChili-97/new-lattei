@@ -8,6 +8,7 @@ import com.sparta.project.icylattei.order.dto.OrderResponseDto;
 import com.sparta.project.icylattei.order.dto.OrdersResponseDto;
 import com.sparta.project.icylattei.order.entity.Order;
 import com.sparta.project.icylattei.order.repository.OrderRepository;
+import com.sparta.project.icylattei.product.repository.ProductRepository;
 import com.sparta.project.icylattei.user.entity.User;
 import jakarta.transaction.Transactional;
 import java.util.ArrayList;
@@ -18,7 +19,7 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class OrderService {
-
+    private final ProductRepository productRepository;
     private final OrderRepository orderRepository;
     private final CartRepository cartRepository;
 

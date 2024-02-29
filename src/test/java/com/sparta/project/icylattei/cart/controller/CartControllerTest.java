@@ -90,7 +90,7 @@ public class CartControllerTest {
     void createCartTest() throws Exception {
         //give
         this.mockUserSetup();
-        CartRequestDto requestDto = new CartRequestDto(1L, 3, "장바구니");
+        CartRequestDto requestDto = new CartRequestDto(1L, 3);
 
         String postInfo = objectMapper.writeValueAsString(requestDto);
         //when - then

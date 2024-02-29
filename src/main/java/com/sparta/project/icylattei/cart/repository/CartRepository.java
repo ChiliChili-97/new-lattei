@@ -9,4 +9,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface CartRepository extends JpaRepository<Cart, Long> {
 
     List<Cart> findAllByUserAndCartStatus(User user, String cartStatus);
+
+    List<Cart> findAllByUser(User user);
 }

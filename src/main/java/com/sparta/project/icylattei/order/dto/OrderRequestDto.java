@@ -1,6 +1,5 @@
 package com.sparta.project.icylattei.order.dto;
 
-import com.sparta.project.icylattei.cart.entity.Cart;
 import java.util.List;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,4 +9,8 @@ import lombok.NoArgsConstructor;
 public class OrderRequestDto {
 
     private List<Long> carts;
+
+    public OrderRequestDto(List<Long> carts) {
+        this.carts = carts;
+    }
 }
