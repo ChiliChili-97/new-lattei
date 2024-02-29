@@ -12,7 +12,6 @@ import com.sparta.project.icylattei.test.UserCommonTest;
 import com.sparta.project.icylattei.user.service.UserService;
 import com.sparta.project.icylattei.userDetails.UserDetailsImpl;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,7 +73,6 @@ class UserControllerTest implements UserCommonTest {
         verify(userService, times(1)).signup(any());
     }
 
-    @Disabled
     @DisplayName("로그아웃 요청")
     @Test
     void logout() throws Exception {

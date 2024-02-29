@@ -111,5 +111,4 @@ public class CartRepositoryTest {
         //then
         assertThat(cart).isEqualTo(savedCart);
     }
-
 }
