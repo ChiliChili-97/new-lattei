@@ -2,11 +2,13 @@ package com.sparta.project.icylattei.user.dto.requestDto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
+@AllArgsConstructor
 public class ProfileRequest {
 
     @NotBlank(message = "닉네임은 필수로 입력해야 합니다.")
@@ -16,9 +18,4 @@ public class ProfileRequest {
 
     @NotBlank(message = "내용은 필수로 입력해야 합니다.")
     private String info;
-
-    public ProfileRequest(String nickname, String info) {
-        this.nickname = nickname;
-        this.info = info;
-    }
 }

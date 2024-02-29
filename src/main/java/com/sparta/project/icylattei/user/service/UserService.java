@@ -12,6 +12,7 @@ import com.sparta.project.icylattei.user.entity.UserRoleEnum;
 import com.sparta.project.icylattei.user.repository.UserRepository;
 import com.sparta.project.icylattei.userDetails.UserDetailsImpl;
 import jakarta.persistence.EntityExistsException;
+import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -53,15 +54,15 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public ProfileResponse getProfile(UserDetailsImpl userDetails) {
-        User user = getUser(userDetails);
+    public ProfileResponse getProfile(User user) {
 
         return new ProfileResponse(user);
     }
 
     @Transactional
-    public ProfileResponse updateProfile(UserDetailsImpl userDetails, ProfileRequest request) {
-        User user = getUser(userDetails);
+    public ProfileResponse updateProfile(String username, ProfileRequest request) {
+        User user = userRepository.findByUsername(username)
+        .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 사용자입니다."));
 
         if (!user.getNickname().equals(request.getNickname())) {
             validateNicknameDuplicate(request.getNickname());
@@ -73,8 +74,9 @@ public class UserService {
     }
 
     @Transactional
-    public void updatePassword(UserDetailsImpl userDetails, PasswordUpdateRequest request) {
-        User user = getUser(userDetails);
+    public void updatePassword(String username, PasswordUpdateRequest request) {
+        User user = userRepository.findByUsername(username)
+            .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 사용자입니다."));
 
         List<PasswordHistory> recentPassword =
             passwordHistoryRepository.findTop3ByUserOrderByCreatedAtDesc(user);
