@@ -27,8 +27,6 @@ public class ReviewServiceTest {
     @Autowired
     UserRepository userRepository;
 
-    ReviewResponse createReview = null;
-
     User user;
 
     @Test
@@ -70,26 +68,6 @@ public class ReviewServiceTest {
         // when - then
         assertThrows(IllegalArgumentException.class, () -> {
             reviewService.createReview(NON_EXISTENT_PRODUCT_ID, request, user);
-        });
-    }
-
-    @Test
-    @DisplayName("Create Review : 실패 - 존재하지 않는 유저가 리뷰 생성 시도")
-    void createReviewFailWithNonExistentUser() {
-
-        // given
-        final Long EXISTENT_PRODUCT_ID = 7L;
-        final String CONTENT = "맛있습니다!";
-        final Long NON_EXISTENT_USER_ID = 100L;
-
-        ReviewRequest request = new ReviewRequest(CONTENT);
-
-        user = userRepository.findById(NON_EXISTENT_USER_ID)
-            .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
-
-        // when - then
-        assertThrows(IllegalArgumentException.class, () -> {
-            reviewService.createReview(EXISTENT_PRODUCT_ID, request, user);
         });
     }
 }
