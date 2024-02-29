@@ -1,13 +1,16 @@
 package com.sparta.project.icylattei.user.service;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.any;
 import static org.mockito.BDDMockito.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.times;
 import static org.mockito.BDDMockito.verify;
 
+import com.sparta.project.icylattei.password.repository.PasswordHistoryRepository;
 import com.sparta.project.icylattei.test.UserCommonTest;
 import com.sparta.project.icylattei.test.UserTestUtils;
 import com.sparta.project.icylattei.user.repository.UserRepository;
@@ -21,6 +24,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.test.util.ReflectionTestUtils;
 
 @ExtendWith(MockitoExtension.class)
 class UserServiceTest implements UserCommonTest {
@@ -30,6 +34,9 @@ class UserServiceTest implements UserCommonTest {
 
     @Mock
     UserRepository userRepository;
+
+    @Mock
+    PasswordHistoryRepository passwordHistoryRepository;
 
     @Mock
     PasswordEncoder passwordEncoder;
@@ -78,5 +85,22 @@ class UserServiceTest implements UserCommonTest {
 
         // when, then
         assertThrows(EntityExistsException.class, () -> userService.signup(TEST_USER_REQUEST_DTO));
+    }
+
+    @DisplayName("프로필 수정")
+    @Test
+    void updateProfile() {
+        given(userRepository.findByUsername(anyString())).willReturn(Optional.of(TEST_USER));
+
+        assertThat(TEST_PROFILE_RESPONSE_DTO).isEqualTo(userService.updateProfile(TEST_USER_NAME, TEST_PROFILE_REQUEST_DTO));
+    }
+
+    @DisplayName("프로필 수정 실패 - 중복된 nickname")
+    @Test
+    void updateProfile_fail_duplicateNickname() {
+        given(userRepository.findByUsername(anyString())).willReturn(Optional.of(TEST_DUPLCATE_USER));
+        given(userRepository.existsByNickname(anyString())).willReturn(true);
+
+        assertThrows(EntityExistsException.class, () -> userService.updateProfile(TEST_USER_NAME, TEST_PROFILE_REQUEST_DTO));
     }
 }
