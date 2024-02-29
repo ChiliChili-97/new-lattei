@@ -36,34 +36,60 @@ public class ReviewServiceTest {
     void createReviewSuccess() {
 
         // given
-        Long productId = 7L;
-        String content = "맛있습니다!";
+        final Long EXISTENT_PRODUCT_ID = 7L;
+        final String CONTENT = "맛있습니다!";
+        final Long EXISTENT_USER_ID = 2L;
 
-        ReviewRequest request = new ReviewRequest(content);
-        user = userRepository.findById(2L).orElse(null);
+        ReviewRequest request = new ReviewRequest(CONTENT);
+
+        user = userRepository.findById(EXISTENT_USER_ID)
+            .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
 
         // when
-        ReviewResponse review = reviewService.createReview(productId, request, user);
+        ReviewResponse review = reviewService.createReview(EXISTENT_PRODUCT_ID, request, user);
 
         // then
         assertNotNull(review.getReviewId());
-        assertEquals(content, review.getContent());
+        assertEquals(CONTENT, review.getContent());
     }
 
     @Test
-    @DisplayName("Create Review : 실패")
-    void createReviewFail() {
+    @DisplayName("Create Review : 실패 - 존재하지 않는 상품에 대한 리뷰 생성 시도")
+    void createReviewFailWithNonExistentProduct() {
 
         // given
-        Long productId = 10L;
-        String content = "맛있습니다!";
+        final Long NON_EXISTENT_PRODUCT_ID = 100L;
+        final String CONTENT = "맛있습니다!";
+        final Long EXISTENT_USER_ID = 2L;
 
-        ReviewRequest request = new ReviewRequest(content);
-        user = userRepository.findById(2L).orElse(null);
+        ReviewRequest request = new ReviewRequest(CONTENT);
+
+        user = userRepository.findById(EXISTENT_USER_ID)
+            .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
 
         // when - then
         assertThrows(IllegalArgumentException.class, () -> {
-            reviewService.createReview(productId, request, user);
+            reviewService.createReview(NON_EXISTENT_PRODUCT_ID, request, user);
+        });
+    }
+
+    @Test
+    @DisplayName("Create Review : 실패 - 존재하지 않는 유저가 리뷰 생성 시도")
+    void createReviewFailWithNonExistentUser() {
+
+        // given
+        final Long EXISTENT_PRODUCT_ID = 7L;
+        final String CONTENT = "맛있습니다!";
+        final Long NON_EXISTENT_USER_ID = 100L;
+
+        ReviewRequest request = new ReviewRequest(CONTENT);
+
+        user = userRepository.findById(NON_EXISTENT_USER_ID)
+            .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
+
+        // when - then
+        assertThrows(IllegalArgumentException.class, () -> {
+            reviewService.createReview(EXISTENT_PRODUCT_ID, request, user);
         });
     }
 }

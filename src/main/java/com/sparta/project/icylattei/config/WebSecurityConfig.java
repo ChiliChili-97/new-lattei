@@ -66,11 +66,16 @@ public class WebSecurityConfig {
                 .requestMatchers("/users/signup", "/users/login").permitAll()
                 .anyRequest().authenticated());
 
-/*
         http.logout(logout -> logout
-            .logoutSuccessUrl("/users/logout")
-            .invalidateHttpSession(true));
-*/
+            .logoutUrl("/users/logout")
+            .addLogoutHandler((request, response, authentication) -> {
+                String token = request.getHeader("Authorization".substring(7));
+                jwtUtil.invalidateToken(token);
+                response.setStatus(200);
+            })
+            .logoutSuccessHandler((request, response, authentication) -> {
+                response.setStatus(200);
+            }));
 
         http.addFilterBefore(jwtAuthorizationFilter(), JwtAuthenticationFilter.class);
         http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
