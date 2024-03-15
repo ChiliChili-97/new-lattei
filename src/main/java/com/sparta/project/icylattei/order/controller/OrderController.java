@@ -1,13 +1,12 @@
 package com.sparta.project.icylattei.order.controller;
 
-import com.sparta.project.icylattei.order.dto.OrderResponseDto;
+import com.sparta.project.icylattei.global.annotation.Logging;
 import com.sparta.project.icylattei.order.dto.OrderRequestDto;
+import com.sparta.project.icylattei.order.dto.OrderResponseDto;
 import com.sparta.project.icylattei.order.dto.OrdersResponseDto;
 import com.sparta.project.icylattei.order.service.OrderService;
 import com.sparta.project.icylattei.userDetails.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("users/orders")
+@Logging
 public class OrderController {
 
     private final OrderService orderService;

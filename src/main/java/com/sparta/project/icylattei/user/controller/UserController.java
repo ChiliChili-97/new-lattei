@@ -1,5 +1,6 @@
 package com.sparta.project.icylattei.user.controller;
 
+import com.sparta.project.icylattei.global.annotation.Logging;
 import com.sparta.project.icylattei.user.dto.requestDto.PasswordUpdateRequest;
 import com.sparta.project.icylattei.user.dto.requestDto.ProfileRequest;
 import com.sparta.project.icylattei.user.dto.requestDto.SignupRequest;
@@ -25,6 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/users")
 @EnableMethodSecurity(securedEnabled = true)
 @RequiredArgsConstructor
+@Logging
 public class UserController {
 
     private final UserService userService;

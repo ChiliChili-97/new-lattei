@@ -1,5 +1,6 @@
 package com.sparta.project.icylattei.review.controller;
 
+import com.sparta.project.icylattei.global.annotation.Logging;
 import com.sparta.project.icylattei.review.dto.requestDto.ReviewRequest;
 import com.sparta.project.icylattei.review.dto.responseDto.ReviewResponse;
 import com.sparta.project.icylattei.review.service.ReviewService;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/products/{productId}")
+@Logging
 public class ReviewController {
 
     private final ReviewService reviewService;
