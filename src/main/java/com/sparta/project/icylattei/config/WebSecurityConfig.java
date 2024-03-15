@@ -69,7 +69,7 @@ public class WebSecurityConfig {
         http.logout(logout -> logout
             .logoutUrl("/users/logout")
             .addLogoutHandler((request, response, authentication) -> {
-                String token = request.getHeader("Authorization".substring(7));
+                String token = jwtUtil.getJwtFromHeader(request);
                 jwtUtil.invalidateToken(token);
                 response.setStatus(200);
             })
